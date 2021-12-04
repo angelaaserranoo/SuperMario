@@ -1,6 +1,5 @@
 import random
 import pyxel
-patata
 #el juego crea y se carga al jugador
 class Player:
     def __init__(self):
