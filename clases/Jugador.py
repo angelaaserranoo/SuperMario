@@ -8,7 +8,7 @@ class Jugador():
         self.__y = y0
         self.__vy = vy0
         self.__score = score0
-        self.__n_vidas= n_vidas
+        self.__n_vidas = n_vidas
         self.__monedas = monedas0
         """Jugador tiene 4 estados (muerto,
         mario, super mario, mario de fuego)
@@ -22,6 +22,9 @@ class Jugador():
     #@property
     def x(self):
         return self.__x
+
+    def setx(self, value):
+        self.__x = value
 
     def sety(self,value):
         self.__y = value
@@ -73,6 +76,7 @@ class Jugador():
         self.__startJumpHeight = 0
     
     def update(self, jumped = False):
+        self.__y += self.__vy
         #MOVER IZQUIERDA
         if pyxel.btn(pyxel.KEY_LEFT) or pyxel.btn(pyxel.GAMEPAD_1_LEFT):
             if len(self.__isMoving) <= 8:
@@ -85,19 +89,19 @@ class Jugador():
         #MOVER DERECHA
         elif pyxel.btn(pyxel.KEY_RIGHT) or pyxel.btn(pyxel.GAMEPAD_1_RIGHT):
             if len(self.__isMoving) <= 8:
-                self.__x = min(self.__x+3, (200/2)-1)
+                self.__x = min(self.__x+3, 200)
                 self.__isMoving.append(True)
             else:
-                self.__x = min(self.__x+3, (200/2)-1)
+                self.__x = min(self.__x+3, 200)
                 self.__isMoving.clear()
         else:
             self.__isMoving.clear()
 
         #SALTO
         if self.__isJumping == False:
-            if pyxel.btn(pyxel.KEY_UP) or pyxel.btn(pyxel.GAMEPAD_1_UP):
-                self.__vy -= 9
-                self.__y += self.__vy
+            if pyxel.btn(pyxel.KEY_UP) == True or pyxel.btn(pyxel.GAMEPAD_1_UP) == True:
                 self.__isJumping = True
+                self.__vy -= 12
+                self.__y += self.__vy
         else:
-            self.__y += self.__vy
+            self.__vy = min(self.__vy+1, 9)
