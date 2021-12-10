@@ -1,0 +1,2 @@
+import pyxel
+pyxel.frame_count

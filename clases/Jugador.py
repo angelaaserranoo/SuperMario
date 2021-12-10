@@ -16,12 +16,45 @@ class Jugador():
         definira su estado"""
         self.__kind = kind
         self.__isMoving = []
-        self.__isJumping = False
+        self.__isFalling = False
         self.__tiempo = int(time.time())
+        self.__previous = [self.__x, self.__y]
     
-    #@property
+    @property
     def x(self):
         return self.__x
+
+    @property
+    def y(self):
+        return self.__y
+    
+    @property
+    def vy(self):
+        return self.__vy
+    @property
+    def isFalling(self):
+        return self.__isFalling    
+
+    @property
+    def previous(self):
+        return self.__previous
+
+    @property
+    def score(self):
+        return self.__score
+
+    @property
+    def monedas(self):
+        return self.__monedas
+
+    @property
+    def tiempo(self):
+        return self.__tiempo
+
+    @property
+    def isMoving(self):
+        return self.__isMoving
+
 
     def setx(self, value):
         self.__x = value
@@ -29,36 +62,12 @@ class Jugador():
     def sety(self,value):
         self.__y = value
     
-    
-    #@property
-    def y(self):
-        return self.__y
-    
-    #@property
-    def vy(self):
-        return self.__vy
-
     def setvy(self, value):
         self.__vy = value
 
-    def isJumping(self):
-        return self.__isJumping
+    def setisFalling(self, value):
+        self.__isFalling = value
 
-    def setisJumping(self, value):
-        self.__isJumping = value
-
-    #@property
-    def score(self):
-        return self.__score
-
-    def monedas(self):
-        return self.__monedas
-
-    def tiempo(self):
-        return self.__tiempo
-
-    def isMoving(self):
-        return self.__isMoving
 
     def Reset(self):
         self.__x = x0
@@ -67,41 +76,47 @@ class Jugador():
         self.__score = score0
         self.__n_vidas = n_vidas
         self.__monedas = monedas0
-        """Jugador tiene 4 estados (muerto,
-        mario, super mario, mario de fuego)
-        el kind será un numero entre 0 y 3 que 
-        definira su estado"""
+        #Jugador tiene 4 estados (muerto,mario, super mario, mario de fuego) el kind será un numero entre 0 y 3 que definira su estado
         self.__kind = kind
-        self.__isJumping = False
+        self.__isFalling = False
         self.__startJumpHeight = 0
     
     def update(self, jumped = False):
+        #self.__previous = [self.__x, self.__y]
         self.__y += self.__vy
         #MOVER IZQUIERDA
         if pyxel.btn(pyxel.KEY_LEFT) or pyxel.btn(pyxel.GAMEPAD_1_LEFT):
             if len(self.__isMoving) <= 8:
-                self.__x = max(self.__x-3, 0)
                 self.__isMoving.append(True)
-            else:
                 self.__x = max(self.__x-3, 0)
+            else:
                 self.__isMoving.clear()
+                self.__x = max(self.__x-3, 0)
 
         #MOVER DERECHA
         elif pyxel.btn(pyxel.KEY_RIGHT) or pyxel.btn(pyxel.GAMEPAD_1_RIGHT):
             if len(self.__isMoving) <= 8:
-                self.__x = min(self.__x+3, 200)
+                self.__x = min(self.__x+3, 100)
                 self.__isMoving.append(True)
             else:
-                self.__x = min(self.__x+3, 200)
+                self.__x = min(self.__x+3, 100)
                 self.__isMoving.clear()
         else:
             self.__isMoving.clear()
 
         #SALTO
-        if self.__isJumping == False:
+        if self.__isFalling == False:
             if pyxel.btn(pyxel.KEY_UP) == True or pyxel.btn(pyxel.GAMEPAD_1_UP) == True:
-                self.__isJumping = True
-                self.__vy -= 12
-                self.__y += self.__vy
+                if self.__vy > -7:
+                    self.__vy -= 1
+                    self.__y += self.__vy
+                else:
+                    self.__isFalling = True
+            else:
+                self.__isFalling = True
         else:
             self.__vy = min(self.__vy+1, 9)
+
+        #Resetea el jugador (Borrar al final)
+        if pyxel.btn(pyxel.KEY_R) :
+            self.Reset()
