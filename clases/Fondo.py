@@ -14,3 +14,9 @@ class Fondo():
     def y(self):
         return self.__y  
 
+    def setx(self, value):
+        self.__x = value
+
+    def sety(self, value):
+        self.__y = value
+
